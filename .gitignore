@@ -1,0 +1,53 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+dataFill/
+
+# dotenv environment variables file
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log.*
+yarn-debug.log.*
+yarn-error.log.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor folders
+.vscode/
+.idea/
+
+# Build output
+/dist/
+build/
+
+# Dependency directories
+bower_components/
+
+# Testing
+/coverage/
+*.lcov
+
+# Debugging files
+.vscode/
+*.swp
+
+# Miscellaneous
+*.tgz
+*.bak
+*.tmp
+
+# MongoDB data files (if using local database storage)
+
+# JetBrains IDE files
+.idea/
+
+# Operating System Files
+*.swp
+*.swo
