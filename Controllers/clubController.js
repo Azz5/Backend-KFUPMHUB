@@ -1,10 +1,8 @@
 const Club = require('../models/clubModel'); // Adjust the path as necessary
-const User = require('../models/User')
 
 exports.getClubMembers = async (req, res) => {
     try {
         const clubId = req.params.id; // Assuming the route is /:id/members
-        console.log(clubId + " THIS IS THE CLUB ID")
 
         // Fetch the club and populate the 'members' field with specific fields
         const club = await Club.findById(clubId)
@@ -53,8 +51,7 @@ exports.createClub = async (req, res) => {
         }
 
         // Destructure necessary fields from the request body
-        const { name, clubAccount} = req.body;
-        console.log(name );
+        const { name, clubAccount } = req.body;
         // Validate required fields
         if (!name) {
             return res.status(400).json({ message: 'Club Name and Leader are required.' });

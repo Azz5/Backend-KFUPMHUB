@@ -1,28 +1,27 @@
 // utils/emailSender.js
 const nodemailer = require("nodemailer");
+const { SESClient, SendRawEmailCommand } = require('@aws-sdk/client-ses');
 
-async function sendOTP(email, otp) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+const ses = new SESClient({ region: 'eu-north-1' }); // Replace with your AWS region
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Your OTP Code",
-    text: `Your OTP code is: ${otp}`,
-  };
+// Configure Nodemailer to use the AWS SES client
+const transporter = nodemailer.createTransport({
+  SES: { ses, aws: require('@aws-sdk/client-ses') }
+});
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log(`OTP sent to ${email}`);
-  } catch (error) {
-    console.error("Error sending email:", error);
-  }
+const mailOptions = {
+  from: process.env.EMAIL_USER,
+  to: email,
+  subject: "Your OTP Code",
+  text: `Your OTP code is: ${otp}`,
+};
+
+try {
+  await transporter.sendMail(mailOptions);
+  console.log(`OTP sent to ${email}`);
+} catch (error) {
+  console.error("Error sending email:", error);
 }
+
 
 module.exports = sendOTP;
