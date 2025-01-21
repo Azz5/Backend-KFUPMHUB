@@ -239,7 +239,6 @@ exports.getReservationByCode = async (req, res) => {
   try {
     // Find the reservation with the given code
     const reservation = await Reservation.findOne({ code });
-    console.log(reservation);
     if (!reservation) {
       // If no reservation is found, return a 404 response
       return res.status(404).json({ message: "Reservation not found" });

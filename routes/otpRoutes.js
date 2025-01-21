@@ -1,6 +1,6 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const generateOTP = require('../utils/otpGenerator'); 
+const generateOTP = require('../utils/otpGenerator');
 const OTP = require('../models/OTP');
 const { User } = require('../models/User');
 const router = express.Router();
@@ -25,7 +25,6 @@ async function sendOTPEmail(email, otp) {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`OTP email sent to ${email}`);
   } catch (error) {
     console.error("Error sending OTP email:", error);
   }
@@ -40,7 +39,6 @@ router.post('/request-otp', async (req, res) => {
 
   // Generate a new OTP
   const otp = generateOTP();
-//   console.log("Generated OTP:", otp);
 
   // Set expiration time (5 minutes)
   const expiresAt = new Date();
@@ -50,7 +48,6 @@ router.post('/request-otp', async (req, res) => {
     const otpRecord = new OTP({ email, otp, expiresAt });
     await otpRecord.save();
 
-    // console.log(`Generated OTP for ${email}: ${otp}`);
 
     // Send the OTP via email
     await sendOTPEmail(email, otp);
@@ -65,7 +62,6 @@ router.post('/request-otp', async (req, res) => {
 // POST /verify-otp
 router.post('/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
-  console.log("OTP received from client:", otp);
 
   try {
     // Get the most recent OTP record for this email
@@ -75,9 +71,6 @@ router.post('/verify-otp', async (req, res) => {
       return res.status(400).send({ message: "No OTP record found for this email." });
     }
 
-    console.log("Current Time:", new Date().toISOString());
-    console.log("OTP Expiration Time:", otpRecord.expiresAt.toISOString());
-    // console.log("OTP in DB:", otpRecord.otp);
 
     const currentTime = new Date();
     if (currentTime > otpRecord.expiresAt) {
@@ -85,13 +78,11 @@ router.post('/verify-otp', async (req, res) => {
     }
 
     if (otpRecord.otp !== otp) {
-      console.log("OTP mismatch. Entered:", otp, "Expected:", otpRecord.otp);
       return res.status(400).send({ message: "Invalid OTP. Please check and try again." });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      console.log("User not found for email:", email);
       return res.status(400).send({ message: "User not found." });
     }
 
@@ -101,7 +92,6 @@ router.post('/verify-otp', async (req, res) => {
     // Delete the OTP after successful verification
     await OTP.deleteOne({ _id: otpRecord._id });
 
-    console.log("OTP verified successfully for user:", email);
     res.status(200).send({ message: "OTP verified successfully. You can now log in." });
   } catch (error) {
     console.error("Error verifying OTP:", error);

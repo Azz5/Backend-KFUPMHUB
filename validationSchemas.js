@@ -75,7 +75,6 @@ const reservationSchema = Joi.object({
 
 // Middleware to Validate Reservation Data
 const validateReservation = (req, res, next) => {
-  console.log("Incoming Request Body:", req.body); // Log the request body
   const { error } = reservationSchema.validate(req.body, { abortEarly: false });
   if (error) {
     console.error("Validation Errors:", error.details); // Log validation errors

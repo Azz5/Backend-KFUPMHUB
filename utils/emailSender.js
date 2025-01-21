@@ -18,7 +18,6 @@ const mailOptions = {
 
 try {
   await transporter.sendMail(mailOptions);
-  console.log(`OTP sent to ${email}`);
 } catch (error) {
   console.error("Error sending email:", error);
 }
