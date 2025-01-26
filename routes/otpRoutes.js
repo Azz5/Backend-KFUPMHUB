@@ -4,6 +4,14 @@ const generateOTP = require('../utils/otpGenerator');
 const OTP = require('../models/OTP');
 const { User } = require('../models/User');
 const router = express.Router();
+const cors = require('cors');
+// Configure CORS middleware
+const corsOptions = {
+  origin: 'https://kfupmhub.xyz',
+  methods: ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
 
 // Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
