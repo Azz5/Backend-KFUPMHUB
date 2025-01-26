@@ -7,30 +7,47 @@ const router = express.Router();
 
 // Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // If you are using Gmail. For other services, adjust accordingly.
+  host: "smtp.resend.com",
+  port: 465,
+  secure: true, // Use TLS
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
-// Helper function to send OTP emails
+    user: "resend", // Special Resend username
+    pass: process.env.EMAIL_PASSWORD// Your Resend API key
+
+  }
+});// Helper function to send OTP emails
 async function sendOTPEmail(email, otp) {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+
+    from: 'KFUPM OTP <KFUPMHUB@otp.kfupmhub.xyz>', // Your verified domain
     to: email,
-    subject: 'Your OTP Code',
-    text: `Your OTP code is: ${otp}`,
+    subject: 'Your KFUPM Verification Code',
+    html: `<div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="color: #2d3748;">KFUPM Account Verification</h2>
+            <p>Your one-time verification code:</p>
+
+            <div style="font-size: 24px; font-weight: bold; color: #3182ce; margin: 15px 0;">
+              ${otp}
+            </div>
+            <p style="color: #718096;">This code expires in 5 minutes</p>
+            <hr style="border-color: #e2e8f0;">
+            <p style="font-size: 12px; color: #718096;">
+              If you didn't request this code, please ignore this email.
+            </p>
+          </div>`
+
   };
 
+
   try {
+
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error("Error sending OTP email:", error);
+    console.error("Resend Error:", error.response?.body || error);
+    throw error;
   }
-}
-
-// POST /request-otp
+}// POST /request-otp
 router.post('/request-otp', async (req, res) => {
   const { email } = req.body;
 
